@@ -5,6 +5,10 @@ import SearchBar from '../../components/controls/Search';
 export default function Main() {
   const [character, setCharacter] = useState([]);
   const [error, setError] = useState('');
+  const [search, setSearch] = useState('');
+  const [isSearching, setIsSearch] = useState(false);
+  const [filterSearch, setFilterSearch] = useState([]);
+  const mappingData = isSearching ? filterSearch : character;
 
   useEffect(() => {
     const characterList = async () => {
@@ -18,15 +22,39 @@ export default function Main() {
     characterList();
   }, []);
 
+  const charSearch = async () => {
+    const data = await fetchCharacters(search);
+    setCharacter(data);
+  };
+
+  const searching = () => {
+    setIsSearch(!!search.length);
+    // console.log('test', isSearching);
+    const filter = character.filter((character) =>
+      character.name.toLowerCase().includes(search.toLowerCase())
+    );
+    setFilterSearch(filter);
+  };
+
   return (
-    <div className="characters">
-      <h1>Characters</h1>
-      {error && <p>{error}</p>}
-      {character.map((character) => (
-        <div key={character.id}>
-          <p>Name:{character.name}</p>
-        </div>
-      ))}
-    </div>
+    <>
+      <>
+        <SearchBar
+          searching={searching}
+          query={search}
+          setQuery={setSearch}
+          //   searchSubmit={charSearch}
+        />
+      </>
+      <div className="characters">
+        <h1>Characters</h1>
+        {error && <p>{error}</p>}
+        {mappingData.map((character) => (
+          <div key={character.id}>
+            <p>{character.name}</p>
+          </div>
+        ))}
+      </div>
+    </>
   );
 }

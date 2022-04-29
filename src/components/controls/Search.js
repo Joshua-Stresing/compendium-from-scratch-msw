@@ -1,12 +1,14 @@
-export default function SearchBar({ query, setQuery, searchSubmit }) {
+export default function SearchBar({ query, setQuery, searching }) {
   return (
     <div className="Search">
       <input
         value={query}
-        onChange={(e) => setQuery(e.target.value)}
+        onChange={(e) => {
+          setQuery(e.target.value);
+          searching();
+        }}
         placeholder="Search Characters..."
       />
-      <button onClick={searchSubmit}>Search</button>
     </div>
   );
 }
