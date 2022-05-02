@@ -8,6 +8,7 @@ export default function Main() {
   const [search, setSearch] = useState('');
   const [isSearching, setIsSearch] = useState(false);
   const [filterSearch, setFilterSearch] = useState([]);
+  const [load, setLoad] = useState(true);
   const mappingData = isSearching ? filterSearch : character;
 
   useEffect(() => {
@@ -15,6 +16,7 @@ export default function Main() {
       try {
         const list = await fetchCharacters();
         setCharacter(list);
+        setLoad(false);
       } catch (error) {
         setError(error.message);
       }
@@ -35,6 +37,8 @@ export default function Main() {
     );
     setFilterSearch(filter);
   };
+
+  if (load) return <h1>loading...</h1>;
 
   return (
     <>
